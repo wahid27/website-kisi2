@@ -141,62 +141,91 @@ export default function App() {
 
 function LoginView({ loginForm, setLoginForm, handleLogin, isSubmitting }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-900 flex items-center justify-center p-4">
-      <div className="bg-white/95 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-white/20">
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center text-white shadow-xl mb-4 rotate-6">
-            <School size={40} />
+    <div className="min-h-screen bg-slate-900 flex flex-col p-4 md:p-8 relative overflow-hidden">
+      {/* Background Efek Ambient Glow */}
+      <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-indigo-600/30 blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-purple-600/30 blur-[120px] pointer-events-none"></div>
+      
+      <div className="flex-1 flex flex-col items-center justify-center w-full z-10">
+        {/* Main Card */}
+        <div className="bg-white p-8 sm:p-10 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] w-full max-w-[420px] relative">
+          
+          {/* Header & Logo */}
+          <div className="flex flex-col items-center mb-10">
+            <div className="w-20 h-20 bg-slate-900 rounded-[1.5rem] flex items-center justify-center text-white shadow-xl shadow-slate-900/20 mb-6 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <School size={36} className="relative z-10" />
+            </div>
+            <h1 className="text-3xl font-black text-slate-800 tracking-tight text-center">
+              E-KISI PAT <span className="text-indigo-600">2025</span>
+            </h1>
+            <p className="text-slate-400 text-[10px] font-black uppercase tracking-[0.25em] mt-2 text-center">MTs Al Istiqomah</p>
           </div>
-          <h1 className="text-3xl font-black text-slate-800 tracking-tighter text-center uppercase">E-KISI PAT 2025</h1>
-          <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">MTs Al Istiqomah • Absensi Aktif</p>
+          
+          <form onSubmit={handleLogin} className="space-y-6">
+            {/* Input Nama */}
+            <div className="space-y-2.5">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Nama Lengkap Siswa</label>
+              <div className="relative group">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-600 transition-colors" size={20} />
+                <input 
+                  required 
+                  type="text" 
+                  placeholder="Ketik namamu di sini..." 
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 hover:bg-slate-100/50 border-2 border-slate-100 rounded-2xl focus:bg-white focus:border-indigo-500 outline-none transition-all font-bold text-slate-700"
+                  value={loginForm.name}
+                  onChange={(e) => setLoginForm({...loginForm, name: e.target.value})}
+                />
+              </div>
+            </div>
+
+            {/* Input Kelas */}
+            <div className="space-y-2.5">
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Pilih Kelas</label>
+              <div className="grid grid-cols-3 gap-3">
+                {[7, 8, 9].map(g => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setLoginForm({...loginForm, grade: g})}
+                    className={`py-4 rounded-2xl border-2 font-black text-xl transition-all duration-300 ${
+                      loginForm.grade === g 
+                      ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-600/30 scale-105' 
+                      : 'bg-white text-slate-400 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/50'
+                    }`}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <button 
+              type="submit" 
+              disabled={isSubmitting || !loginForm.name || !loginForm.grade}
+              className="w-full mt-4 bg-slate-900 text-white py-5 rounded-2xl font-black text-sm tracking-wider uppercase flex items-center justify-center gap-3 hover:bg-indigo-600 transition-all duration-300 shadow-xl shadow-slate-900/20 disabled:opacity-50 disabled:hover:bg-slate-900 group"
+            >
+              {isSubmitting ? <Loader2 className="animate-spin" /> : <><PlayCircle size={20} className="group-hover:scale-110 transition-transform" /> MASUK & ABSEN</>}
+            </button>
+          </form>
         </div>
-        <form onSubmit={handleLogin} className="space-y-6">
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-indigo-500 uppercase tracking-widest ml-1">Nama Lengkap Siswa</label>
-            <div className="relative">
-              <User className="absolute left-4 top-4 text-slate-300" size={20} />
-              <input 
-                required 
-                type="text" 
-                placeholder="Ketik namamu..." 
-                className="w-full pl-12 pr-4 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:border-indigo-400 outline-none transition-all font-bold"
-                value={loginForm.name}
-                onChange={(e) => setLoginForm({...loginForm, name: e.target.value})}
-              />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-indigo-500 uppercase tracking-widest ml-1">Pilih Kelas</label>
-            <div className="grid grid-cols-3 gap-3">
-              {[7, 8, 9].map(g => (
-                <button
-                  key={g}
-                  type="button"
-                  onClick={() => setLoginForm({...loginForm, grade: g})}
-                  className={`py-4 rounded-2xl border-2 font-black text-xl transition-all ${loginForm.grade === g ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg' : 'bg-white text-slate-400 border-slate-100 hover:border-indigo-200'}`}
-                >
-                  {g}
-                </button>
-              ))}
-            </div>
-          </div>
-          <button 
-            type="submit" 
-            disabled={isSubmitting || !loginForm.name || !loginForm.grade}
-            className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 hover:bg-indigo-600 transition-all shadow-xl disabled:opacity-50"
-          >
-            {isSubmitting ? <Loader2 className="animate-spin" /> : <><PlayCircle size={22} /> MASUK & ABSEN</>}
-          </button>
-        </form>
+
+        {/* Memanggil Footer dengan tema gelap agar cocok dengan background slate-900 */}
+        <div className="w-full max-w-[420px] mt-6 relative z-10">
+          <Footer isDark={true} />
+        </div>
       </div>
     </div>
   );
 }
 
-function DashboardView({ user, setView, onLogout, totalQuestions }) {
+function DashboardView({ user, setView, onLogout }) {
+  const activeQuestions = QUESTION_BANK[user?.grade] || [];
+  const totalQuestions = activeQuestions.length;
   return (
-    <div className="min-h-screen bg-indigo-50/50 p-6 md:p-12">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-indigo-50/50 flex flex-col p-6 md:p-12">
+      <div className="flex-1 max-w-4xl mx-auto w-full">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10">
           <div className="flex items-center gap-4 w-full sm:w-auto">
             <div className="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl uppercase shadow-md">{user.name.charAt(0)}</div>
@@ -222,12 +251,13 @@ function DashboardView({ user, setView, onLogout, totalQuestions }) {
             <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
               <Zap size={32} />
             </div>
-            <h2 className="text-2xl font-black text-slate-800 mb-2">Mulai Latihan</h2>
-            <p className="text-slate-500 text-sm font-medium leading-relaxed mb-6">Kerjakan simulasi {totalQuestions} soal kuis dengan koreksi instan!</p>
+            <h2 className="text-2xl font-black text-slate-800 mb-2">Latihan Interaktif</h2>
+            <p className="text-slate-500 text-sm font-medium leading-relaxed mb-6">Kerjakan simulasi {totalQuestions} soal kuis dengan koreksi dan penjelasan instan!</p>
             <div className="flex items-center gap-2 text-emerald-600 font-black text-sm uppercase">Mulai Gacor <ChevronRight size={16} /></div>
           </div>
         </div>
       </div>
+      <Footer isDark={false} />
     </div>
   );
 }
@@ -241,8 +271,8 @@ function KisiView({ questions, setView, grade }) {
   );
 
   return (
-    <div className="min-h-screen bg-white p-6 md:p-12 pb-24">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-white flex flex-col p-6 md:p-12 pb-24">
+      <div className="flex-1 max-w-5xl mx-auto w-full">
         <button onClick={() => setView('dashboard')} className="mb-8 flex items-center gap-2 text-slate-400 font-bold hover:text-indigo-600 transition-colors"><ChevronLeft size={20}/> Kembali</button>
         
         <div className="bg-slate-900 rounded-[2rem] p-10 text-white mb-8 relative overflow-hidden">
@@ -285,6 +315,7 @@ function KisiView({ questions, setView, grade }) {
           </table>
         </div>
       </div>
+      <Footer isDark={false} />
     </div>
   );
 }
@@ -508,6 +539,40 @@ function QuizView({ questions, currentIdx, setCurrentIdx, answers, setAnswers, s
             <>NEXT <ChevronRight size={18}/></>
           )}
         </button>
+      </div>
+    </div>
+  );
+}
+
+function Footer({ isDark = false }) {
+  const borderColor = isDark ? "border-white/20" : "border-slate-200";
+  const bgGlass = isDark ? "bg-white/10" : "bg-slate-50";
+
+  return (
+    <div className={`mt-12 pt-8 pb-4 w-full flex flex-col items-center justify-center gap-5 ${isDark ? 'text-white/80' : 'text-slate-600'}`}>
+      <div className="flex items-center gap-4">
+        {/* Tombol Instagram */}
+        <a href="https://www.instagram.com/wachid_amiruddin" target="_blank" rel="noreferrer" 
+           className={`w-12 h-12 rounded-2xl ${bgGlass} backdrop-blur-md border ${borderColor} flex items-center justify-center transition-all shadow-sm hover:scale-110 hover:shadow-xl hover:bg-gradient-to-tr hover:from-yellow-400 hover:via-pink-500 hover:to-purple-600 hover:border-transparent hover:text-white group`}>
+          <svg className={`w-5 h-5 transition-transform group-hover:scale-110 ${isDark ? 'text-white/80' : 'text-slate-400'} group-hover:text-white`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+        </a>
+        
+        {/* Tombol TikTok */}
+        <a href="https://www.tiktok.com/@nugas.id99" target="_blank" rel="noreferrer" 
+           className={`w-12 h-12 rounded-2xl ${bgGlass} backdrop-blur-md border ${borderColor} flex items-center justify-center transition-all shadow-sm hover:scale-110 hover:shadow-xl hover:bg-black hover:border-transparent hover:text-white group`}>
+          <svg className={`w-5 h-5 transition-transform group-hover:scale-110 ${isDark ? 'text-white/80' : 'text-slate-400'} group-hover:text-white`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path></svg>
+        </a>
+        
+        {/* Tombol WhatsApp */}
+        <a href="https://wa.me/6282229398585" target="_blank" rel="noreferrer" 
+           className={`w-12 h-12 rounded-2xl ${bgGlass} backdrop-blur-md border ${borderColor} flex items-center justify-center transition-all shadow-sm hover:scale-110 hover:shadow-xl hover:bg-emerald-500 hover:border-transparent hover:text-white group`}>
+          <svg className={`w-5 h-5 transition-transform group-hover:scale-110 ${isDark ? 'text-white/80' : 'text-slate-400'} group-hover:text-white`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+        </a>
+      </div>
+      
+      <div className="flex flex-col items-center">
+         <p className={`text-[10px] font-black uppercase tracking-[0.2em] mb-1 ${isDark ? 'text-indigo-300' : 'text-indigo-500'}`}>Developer & Educator</p>
+         <p className="text-xs font-bold opacity-60">© {new Date().getFullYear()} Wachid Amiruddin. All Rights Reserved.</p>
       </div>
     </div>
   );
