@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+/* Tambahan agar scrollbar di HP lebih cantik */
+::-webkit-scrollbar {
+width: 5px;
+}
+::-webkit-scrollbar-thumb {
+background: #6366f1;
+border-radius: 10px;
+}
